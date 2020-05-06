@@ -4,13 +4,40 @@
 
 OPENCV_VERSION='4.2.0'
 
+# Actualizar
+
 sudo apt-get -y update
 
-sudo apt-get install -y build-essential cmake
-sudo apt-get install -y qt5-default libvtk6-dev
-sudo apt-get install -y zlib1g-dev libjpeg-dev libwebp-dev libpng-dev libtiff5-dev libjasper-dev \
+# Comprobar estádo de la cámara
 
-                        libopenexr-dev libgdal-dev
+camstatuss=$(vcgencmd get_camera)
+
+if [[ $camstatuss =~ "supported=0" ]]; then 
+    echo "La cámara no está habilitada."; 
+    echo "A continuación se abrirá la configuracion de la Raspberry Pi"; 
+    echo "Habilite el puerto de la cámara: nterfacing Options > Camera"; 
+    read -n 1 -s -r -p "Pulsar una tecla para abir configuración de raspberry";
+    sudo raspi-config; exit 1;
+fi
+
+if [[ $camstatuss =~ "detected=0" ]]; then
+    echo "No se ha detectado ninguna cámara.";
+    echo "Compruebe las conexiones.";
+    echo "Presione a para salir o cualquier tecla para continuar.";
+    read -rsn1 input; if [ "$input" = "a" ]; then
+        echo "Abortando..."; exit 1;
+    fi;
+fi
+
+# Instalar developer tools
+
+sudo apt-get install -y build-essential cmake pkg-config
+
+# Instalar paquetes de E/S de imagen
+
+sudo apt-get install -y qt5-default libvtk6-dev
+
+# Instalar paquetes de E/S de video
 
 sudo apt-get install -y libdc1394-22-dev libavcodec-dev libavformat-dev libswscale-dev \
 
@@ -18,15 +45,29 @@ sudo apt-get install -y libdc1394-22-dev libavcodec-dev libavformat-dev libswsca
 
                         libopencore-amrnb-dev libopencore-amrwb-dev libv4l-dev libxine2-dev
 
+
+sudo apt-get install -y zlib1g-dev libjpeg-dev libwebp-dev libpng-dev libtiff5-dev libjasper-dev \
+
+                        libopenexr-dev libgdal-dev
+
+# Para compilar Highgui
+
 sudo apt-get install -y libfontconfig1-dev libcairo2-dev
+
+# Librerias para optimizacion
+
 sudo apt-get install -y libgdk-pixbuf2.0-dev libpango1.0-dev
 sudo apt-get install -y libgtk2.0-dev libgtk-3-dev
 sudo apt-get install -y libtbb-dev libeigen3-dev
 
 sudo apt-get install -y libatlas-base-dev gfortran
 
+# Para HDF5 y GUI Qt
+
 sudo apt-get install -y libhdf5-dev libhdf5-serial-dev libhdf5-103
 sudo apt-get install -y libqtgui4 libqtwebkit4 libqt4-test python3-pyqt5
+
+# Instalar Python
 
 sudo apt-get install -y python-dev  python-tk  pylint  python-numpy  \
 
@@ -39,6 +80,8 @@ wget https://bootstrap.pypa.io/get-pip.py
 sudo python get-pip.py
 sudo python3 get-pip.py
 sudo rm -rf ~/.cache/pip
+
+# Preparar virtual enviroment
 
 sudo echo "# virtualenv and virtualenvwrapper" >> ~/.bashrc
 sudo echo "export WORKON_HOME=$HOME/.virtualenvs" >> ~/.bashrc
@@ -56,6 +99,8 @@ pip install numpy
 sudo apt-get install -y ant default-jdk
 
 sudo apt-get install -y doxygen unzip wget
+
+# Descargar y desempaquetar OpenCV y OpenCV-Contrib
 
 wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip
 
