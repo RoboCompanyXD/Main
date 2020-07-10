@@ -187,6 +187,10 @@ systemctl status bluetooth
 pip3 install bitalino
 pip install bitalino
 
+# Instalar libreria PyLidar3
+
+pip3 install PyLidar3
+
 # Instalar NoIp
 
 wget https://www.noip.com/client/linux/noip-duc-linux.tar.gz
