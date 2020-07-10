@@ -220,3 +220,7 @@ mkdir ~/.ssh
 chmod 0700 ~/.ssh
 touch ~/.ssh/authorized_keys
 chmod 0644 ~/.ssh/authorized_keys
+
+# TODO: Clonar respositorios necesarios
+
+# git clone ...
