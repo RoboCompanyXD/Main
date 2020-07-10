@@ -208,5 +208,15 @@ sudo systemctl restart ssh
 
 # Añadir reglas para dispositivos USB
 
-echo -e 'ACTION=="add", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6015", ATTRS{serial}=="DN04GZXQ", SYMLINK+="ttyUSBRobot"' >> /etc/udev/rules.d/10-local.rules
-echo -e 'ACTION=="add", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", ATTRS{serial}=="0001", SYMLINK+="ttyUSBLidar"' >> /etc/udev/rules.d/10-local.rules
+echo -e 'ACTION=="add", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6015", ATTRS{serial}=="DN04GZXQ", SYMLINK+="ttyUSBRobot"' >> /etc/udev/rules.d/10-local.rules && echo -e 'ACTION=="add", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", ATTRS{serial}=="0001", SYMLINK+="ttyUSBLidar"' >> /etc/udev/rules.d/10-local.rules
+
+# Habilitar SSH
+
+ssh-keygen -A && update-rc.d ssh enable && invoke-rc.d ssh start
+
+# Crenerar fichero ~/.ssh/authorized_keys
+
+mkdir ~/.ssh
+chmod 0700 ~/.ssh
+touch ~/.ssh/authorized_keys
+chmod 0644 ~/.ssh/authorized_keys
